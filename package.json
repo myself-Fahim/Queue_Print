@@ -9,8 +9,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "tsx watch src/server.ts",
-    "build" : "tsc",
-    "start" : "node dist/server.js",
+    "build": "tsc",
+    "start": "node dist/server.js",
     "db:migrate": "npx prisma migrate dev",
     "db:generate": "npx prisma generate"
   },
@@ -33,6 +33,7 @@
     "cors": "^2.8.6",
     "dotenv": "^18.0.0",
     "express": "^5.2.1",
+    "http-status": "^2.1.0",
     "pg": "^8.23.0"
   }
 }
