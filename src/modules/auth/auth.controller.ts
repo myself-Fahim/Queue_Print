@@ -14,6 +14,28 @@ const registerUserController = catchAsync(
 
 )
 
+const loginUserController = catchAsync(async (req: Request, res: Response) => {
+    const payload = req.body
+    const { accessToken, refreshToken } = await authService.loginUserService(payload)
+
+    res.cookie('accessToken', accessToken, {
+        httpOnly: true,
+        secure: false,
+        sameSite: "none",
+        maxAge: 1000 * 60 * 60 * 24 * 2
+    })
+    res.cookie('refreshToken', refreshToken, {
+        httpOnly: true,
+        secure: false,
+        sameSite: "none",
+        maxAge: 1000 * 60 * 60 * 24 * 15
+    })
+    sendResponse(res, {
+        success: true, message: 'User login successfully', statusCode: httpStatus.OK, data: {
+            accessToken, refreshToken
+        }
+    })
+})
 
 
 
@@ -21,5 +43,6 @@ const registerUserController = catchAsync(
 
 
 export const authController = {
-    registerUserController
+    registerUserController,
+    loginUserController
 }

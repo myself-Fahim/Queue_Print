@@ -3,6 +3,7 @@ import express, { Application, Request, Response, urlencoded } from 'express'
 import config from './config'
 import cors from 'cors'
 import { authRoute } from './modules/auth/auth.route'
+import { userRoute } from './modules/user/user.route'
 const app : Application = express()
 
 
@@ -22,6 +23,7 @@ app.get('/',(req :Request,res:Response)=>{
 
 // Apps route middleware
 app.use('/api/auth',authRoute)
+app.use('/api/user',userRoute)
 
 
 

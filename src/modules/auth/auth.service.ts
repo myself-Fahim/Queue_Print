@@ -1,6 +1,9 @@
 import bcrypt from "bcryptjs"
 import { prisma } from "../../lib/prisma"
 import { RegisterUser } from "../user/user.interface"
+import jwt, { SignOptions } from 'jsonwebtoken'
+import config from "../../config"
+import { jwtCreateToken } from "../../utils/jwt"
 
 const registerUserService = async(payload : RegisterUser) =>{
 
@@ -39,6 +42,40 @@ const registerUserService = async(payload : RegisterUser) =>{
     return user
 }
 
+
+
+const loginUserService = async(payload : any) =>{
+    const {email,password} = payload
+    const user = await prisma.user.findUniqueOrThrow({
+        where:{
+            email
+        }
+    })
+    const isPasswordMatched = await bcrypt.compare(password,user.password)
+
+    if(!isPasswordMatched) {
+        throw new Error('Invalid credential')
+    }
+
+    const jwtPayload = {
+        id:user.id,
+        name:user.name,
+        email : user.email,
+        phone_no : user.phone_no, 
+        role : user.role
+    }
+
+    const accessToken = jwtCreateToken(jwtPayload,config.access_secret,config.access_timeline as SignOptions)
+    const refreshToken = jwtCreateToken(jwtPayload,config.refresh_secret,config.refresh_timeline as SignOptions)
+    
+    return {
+        accessToken,
+        refreshToken
+    }
+
+}
+
 export const authService = {
-    registerUserService
+    registerUserService,
+    loginUserService
 }
