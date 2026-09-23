@@ -16,6 +16,28 @@ const myProfile = catchAsync(async (req: Request, res: Response) => {
 
 })
 
+
+const getNewAccessToken = catchAsync(async (req: Request, res: Response) => {
+    const refresh_token = req.cookies.refreshToken
+    const { access_token } = await userService.getNewAccessToken(refresh_token)
+
+    res.cookie('accessToken', access_token, {
+        httpOnly: true,
+        secure: false,
+        sameSite: "none",
+        maxAge: 1000 * 60 * 60 * 24 * 2
+    })
+
+    sendResponse(res, {
+        success: true,
+        message: "Token retrieve successfully",
+        statusCode: httpStatus.OK,
+        data: {access_token}
+    })
+
+})
+
 export const userController = {
-    myProfile
+    myProfile,
+    getNewAccessToken
 }

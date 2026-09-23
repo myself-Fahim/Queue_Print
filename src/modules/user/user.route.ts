@@ -5,6 +5,7 @@ import { Role } from "../../../generated/prisma/enums";
 
 const router = Router()
 router.get('/me',auth(Role.SHOP_OWNER,Role.ADMIN,Role.USER),userController.myProfile)
+router.post('/refresh-token',userController.getNewAccessToken)
 
 
 export const userRoute = router
